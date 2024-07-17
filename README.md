@@ -18,4 +18,3 @@
 
    5_2_nec_rf_validation.R
    This script is used to analyze the predictive performance from public cohorts and validation cohort, including Supplementary Figure 12a, Figure 5e, Supplementary Figure 12b, Figure 6a, Figure 6b, Figure 6c.
-![image](https://github.com/user-attachments/assets/4612c492-c1ad-4116-a358-3b99ac4ba401)
