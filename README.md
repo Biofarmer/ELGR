@@ -14,7 +14,7 @@
    This script is used to analyze differences between cases and controls, including, Figure 4b, Figure 4a, Figure 4c, Supplementary Figure 9b, Supplementary Figure 9c, Supplementary Figure 10a, Supplementary Figure 10b, Figure 4e, Supplementary Figure 9d, Figure 4f, Supplementary Figure 11a, Supplementary Figure 11b, Supplementary Figure 11c, Figure 5a, Figure 5c, Figure 5b, Supplementary Figure 11d, Figure 5d, Supplementary Figure 11e.
 
    5_1_nec_rf_discovery.R
-   This script is used to produce the AU-ROC from four public cohorts for discovery and validation based on features from subtype, species, subtype + species, respectively, with intra-cohort, combined cohorts of 10-times fivefold stratified cross-validation, and LOSO prediction. The output files are auc_cb_intra.csv, auc_loso_cb.csv, which are used for 5_2_nec_rf_validation.R.
+   This script is used to produce the AU-ROC from four public cohorts for discovery and validation based on features from subtype, species, subtype + species, respectively, with intra-cohort and combined cohorts of 10-times fivefold stratified cross-validation. The output files is auc_cb_intra.csv, which is used for 5_2_nec_rf_validation.R.
 
    5_2_nec_rf_validation.R
    This script is used to analyze the predictive performance from public cohorts and validation cohort, including Supplementary Figure 12, Figure 5e, Figure 6a, Figure 6b, Figure 6c.
