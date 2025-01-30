@@ -135,35 +135,68 @@ vali_species_sel <- vali_species%>%filter(auc==max(auc))%>%filter(mtry==min(mtry
 vali_subtype_species <- read.csv("data/rf_auc_subtype_species_validation_m_noadd_six_newrule.csv")
 vali_subtype_species_sel <- vali_subtype_species%>%filter(auc==max(auc))%>%filter(mtry==min(mtry))
 
+#bootstrapping on features
+bt_feature <- read.csv("data/auc_rep_feature.csv",check.names=FALSE,stringsAsFactors = FALSE)
+bt_feature_cb <- rbind.fill(bt_feature,vali_subtype_sel%>%mutate(group="subtype",seed="all"),
+                            vali_species_sel%>%mutate(group="species",seed="all"),
+                       vali_subtype_species_sel%>%mutate(group="subtype_species",seed="all"))
+bt_feature_cb_sum <- bt_feature_cb%>%group_by(group)%>%dplyr::summarise(mean=mean(auc),median=median(auc),
+                                                                  q25=quantile(auc)[2],q75=quantile(auc)[4],
+                                                                  CI_low=CI(auc)[3],CI_high=CI(auc)[1])
+bt_feature_cb_sum
+# group            mean median   q25   q75 CI_low CI_high
+# <chr>           <dbl>  <dbl> <dbl> <dbl>  <dbl>   <dbl>
+# 1 species         0.712  0.727 0.667 0.768  0.696   0.728
+# 2 subtype         0.826  0.823 0.803 0.859  0.819   0.834
+# 3 subtype_species 0.806  0.798 0.778 0.838  0.797   0.815
+
+#bootstrapping on samples
+bt_sample <- read.csv("data/auc_rep_sample.csv",check.names=FALSE,stringsAsFactors = FALSE)
+bt_sample_cb <- rbind.fill(bt_sample,vali_subtype_sel%>%mutate(group="subtype",seed="all"),
+                           vali_species_sel%>%mutate(group="species",seed="all"),
+                            vali_subtype_species_sel%>%mutate(group="subtype_species",seed="all"))
+bt_sample_cb_sum <- bt_sample_cb%>%group_by(group)%>%dplyr::summarise(mean=mean(auc),median=median(auc),
+                                                                        q25=quantile(auc)[2],q75=quantile(auc)[4],
+                                                                        CI_low=CI(auc)[3],CI_high=CI(auc)[1])
+bt_sample_cb_sum
+# group            mean median   q25   q75 CI_low CI_high
+# <chr>           <dbl>  <dbl> <dbl> <dbl>  <dbl>   <dbl>
+# 1 species         0.704  0.707 0.641 0.758  0.688   0.721
+# 2 subtype         0.786  0.793 0.753 0.828  0.774   0.798
+# 3 subtype_species 0.771  0.778 0.737 0.813  0.759   0.783
+
+bt_feature_sample <- rbind.fill(bt_feature_cb%>%mutate(group2="Bootstrapping on features"),
+                                bt_sample_cb%>%mutate(group2="Bootstrapping on samples"))
+bt_feature_sample_seed <- bt_feature_sample%>%filter(seed!="all")
+bt_feature_sample_all <- bt_feature_sample%>%filter(seed=="all")
+#Figure 5e
+auc_feature_sample <- ggplot(bt_feature_sample_seed, aes(x=group, y=auc,fill=group)) +
+   geom_boxplot(outlier.size = 0.8,width=0.6)+
+   geom_jitter(size=0.8,width = 0.3)+
+   geom_point(data =bt_feature_sample_all, aes(x=group, y=auc),shape=23,color="#B41707",fill="#B41707")+
+   facet_wrap(~group2)+
+   scale_fill_manual(values = c("#8DD3C7","#BEBADA","#FB8072"))+
+   scale_x_discrete(labels=c("species"="Species","subtype"="ARGs","subtype_species"="Both"))+
+   scale_y_continuous(limits = c(0.4,1.1))+
+   labs(x ="", y="Classifier AU-ROCs")+
+   theme_bw()+
+   theme(panel.grid = element_blank(),axis.line = element_blank(),
+         panel.border = element_rect(colour = "black",linewidth = 1))+
+   theme(panel.background = element_blank(),
+         plot.background = element_blank(),
+         legend.position = "none",
+         strip.text = element_text(size=12, colour = "black"),
+         axis.text = element_text(size=12, colour = "black"),
+         axis.title.y = element_text(size=12, colour = "black"))
+
 #subtype
 window_db_subtype <- read.csv("data/window_db_subtype_new.csv",check.names=FALSE,stringsAsFactors = FALSE)#1382 runs
-#species
-metaphlan4_preterm <- read.csv("data/metaphlan4_preterm_new.csv")
-metaphlan4_preterm[is.na(metaphlan4_preterm)] <- 0
-metaphlan4_preterm_2 <- metaphlan4_preterm%>%dplyr::select(clade_name,unique(window_db_subtype$SequenceID))
-metaphlan4_species <- metaphlan4_preterm_2%>%filter(grepl("k__Bacteria",clade_name))%>%filter(grepl("s__",clade_name))%>%filter(!grepl("t__",clade_name))
-metaphlan4_species$species <- sapply(strsplit(metaphlan4_species$clade_name, split='s__', fixed=TRUE), function(x)(x[2]))
-metaphlan4_species <- metaphlan4_species%>%dplyr::select(-clade_name)%>%column_to_rownames("species")
-metaphlan4_species <- metaphlan4_species[which(colSums(metaphlan4_species)!=0)]
 #validation
-window_db_subtype_validation <- read.csv("data/window_db_sel_subtype_meta_validation_newrule.csv",check.names=FALSE,stringsAsFactors = FALSE)#1382 runs
-metaphlan4_validation <- read.csv("data/metaphlan4_validation.csv")
-metaphlan4_validation[is.na(metaphlan4_validation)] <- 0
-metaphlan4_validation_2 <- metaphlan4_validation%>%dplyr::select(clade_name,unique(window_db_subtype_validation$SequenceID))
-metaphlan4_species_validation <- metaphlan4_validation_2%>%filter(grepl("k__Bacteria",clade_name))%>%filter(grepl("s__",clade_name))%>%filter(!grepl("t__",clade_name))
-metaphlan4_species_validation$species <- sapply(strsplit(metaphlan4_species_validation$clade_name, split='s__', fixed=TRUE), function(x)(x[2]))
-metaphlan4_species_validation <- metaphlan4_species_validation%>%dplyr::select(-clade_name)%>%column_to_rownames("species")
-metaphlan4_species_validation_rel <- metaphlan4_species_validation/100
-metaphlan4_species_validation_rel_t <- metaphlan4_species_validation_rel%>%t()%>%as.data.frame()
-metaphlan4_species_validation_rel_t <- metaphlan4_species_validation_rel_t[,which(colSums(metaphlan4_species_validation_rel_t)!=0)]
-metaphlan4_species_validation_rel_t <- metaphlan4_species_validation_rel_t%>%rownames_to_column("SequenceID")
-metaphlan4_species_validation_rel_t_meta <- right_join(window_db_subtype_validation%>%dplyr::select(1:3),
-                                                       metaphlan4_species_validation_rel_t,by="SequenceID")
+window_db_subtype_validation <- read.csv("data/window_db_sel_subtype_meta_validation_newrule.csv",check.names=FALSE,stringsAsFactors = FALSE)
 #metadata
 metadata_prenec <- read.csv("data/metadata_prenec_closest_new.csv")
 #windows
-window_db <- read.csv("data/window_db_new.csv")#1434 runs
-length(unique(window_db$SequenceID))#1229
+window_db <- read.csv("data/window_db_new.csv")
 #build model for windows 0,4,7 only with subtype
 window_db_047 <- window_db%>%filter(window%in%c(0,4,7))%>%
    filter(Study%in%c("BrooksB_2017","LouYC_2024","MasiAC_2021","RahmanSF_2018","RavehSadkaT_2016","ThanertR_2024"))
@@ -196,36 +229,6 @@ window_db_sel_subtype_meta_feature <- left_join(window_db_sel_subtype_meta_featu
 window_db_sel_subtype_meta_feature <- window_db_sel_subtype_meta_feature%>%filter(!SequenceID%in%c("subtype_median","subtype_mean"))
 window_db_sel_subtype_meta_feature <- window_db_sel_subtype_meta_feature%>%dplyr::select(-subtype_mean)
 
-#species
-metaphlan4_species_t <- metaphlan4_species%>%t()%>%as.data.frame()%>%rownames_to_column("SequenceID")
-metaphlan4_species_t[-1] <- metaphlan4_species_t[-1]/100
-window_db_species_047 <- metaphlan4_species_t%>%filter(SequenceID%in%window_db_047$SequenceID)%>%column_to_rownames("SequenceID")
-window_db_species_047 <- window_db_species_047[,which(colSums(window_db_species_047)!=0)]
-window_db_species_047_yes <- window_db_species_047[metadata_prenec_047_yes$SequenceID,]
-window_db_species_047_add <- rbind(window_db_species_047, 
-                                   species_median = apply(window_db_species_047_yes,MARGIN=2,median,na.rm = TRUE),
-                                   species_mean = apply(window_db_species_047_yes,MARGIN=2,mean,na.rm = TRUE))
-window_db_sel_species_meta <- right_join(metadata_prenec%>%dplyr::select(SequenceID,Study,nec),
-                                         window_db_species_047_add%>%rownames_to_column("SequenceID"),by="SequenceID")
-window_db_sel_species_meta <- rbind.fill(window_db_sel_species_meta,metaphlan4_species_validation_rel_t_meta)
-window_db_sel_species_meta[is.na(window_db_sel_species_meta)] <- 0
-window_db_sel_species_meta_dist <- window_db_sel_species_meta%>%dplyr::select(-Study,-nec)%>%column_to_rownames("SequenceID")
-window_db_sel_species_meta_dist_richness <- rowSums(window_db_sel_species_meta_dist != 0)%>%as.data.frame()%>%setNames("species_Richness")%>%rownames_to_column("SequenceID")
-window_db_sel_species_meta_dist_shannon <- diversity(window_db_sel_species_meta_dist, index = "shannon", MARGIN=1)%>%as.data.frame()%>%setNames("species_Shannon")%>%rownames_to_column("SequenceID")
-species_alpha <- left_join(window_db_sel_species_meta_dist_richness,window_db_sel_species_meta_dist_shannon,by="SequenceID")
-window_db_sel_species_meta_dist_beta <- vegdist(window_db_sel_species_meta_dist, method = "bray")
-window_db_sel_species_meta_dist_beta_2 <- window_db_sel_species_meta_dist_beta%>%as.matrix()%>%as.data.frame()
-window_db_sel_species_meta_dist_beta_3 <- window_db_sel_species_meta_dist_beta_2[c("species_median","species_mean")]
-window_db_sel_species_meta_feature <- left_join(window_db_sel_species_meta,
-                                                window_db_sel_species_meta_dist_beta_3%>%rownames_to_column("SequenceID"),by="SequenceID")
-window_db_sel_species_meta_feature <- left_join(window_db_sel_species_meta_feature,species_alpha,by="SequenceID")
-window_db_sel_species_meta_feature <- window_db_sel_species_meta_feature%>%filter(!SequenceID%in%c("species_median","species_mean"))
-window_db_sel_species_meta_feature <- window_db_sel_species_meta_feature%>%dplyr::select(-species_mean)
-
-#subtype + species
-window_db_sel_subtype_species_meta <- left_join(window_db_sel_subtype_meta_feature,window_db_sel_species_meta_feature%>%dplyr::select(-c(2:3)),by="SequenceID")
-window_db_sel_subtype_species_meta[is.na(window_db_sel_subtype_species_meta)] <- 0
-
 #random forest
 train_set_subtype <- window_db_sel_subtype_meta_feature %>% filter(Study!="validation")%>%dplyr::select(-Study,-subtype_median,-subtype_Richness,-subtype_Shannon)
 x_train_subtype <- train_set_subtype%>%dplyr::select(-nec)%>%column_to_rownames("SequenceID")%>%dplyr::select(sort(names(.)))
@@ -252,119 +255,11 @@ print(auc)
 imp_fea_subtype <- as.data.frame(rf_train_subtype$importance)
 imp_fea_subtype <- imp_fea_subtype%>%rownames_to_column("subtype")%>%
    dplyr::select(subtype,MeanDecreaseAccuracy, MeanDecreaseGini)%>%dplyr::arrange(desc(MeanDecreaseGini))
-
-#species
-train_set_species <- window_db_sel_species_meta_feature %>% filter(Study!="validation")%>%dplyr::select(-Study,-species_median,-species_Richness,-species_Shannon)
-x_train_species <- train_set_species%>%dplyr::select(-nec)%>%column_to_rownames("SequenceID")%>%dplyr::select(sort(names(.)))
-y_train_species <- as.factor(train_set_species$nec)
-set.seed(1000)
-rf_train_species <- randomForest(x=x_train_species,y=y_train_species, importance = TRUE, ntree = 500, proximity = TRUE,mtry = vali_species_sel$mtry)
-test_set_species <- window_db_sel_species_meta_feature %>% filter(Study=="validation")%>%
-   dplyr::select(-Study,-species_median,-species_Richness,-species_Shannon)
-x_test_species <- test_set_species%>%dplyr::select(-nec)%>%column_to_rownames("SequenceID")%>%dplyr::select(sort(names(.)))
-y_test_species <- test_set_species$nec
-rf_pred_prob_species <- predict(rf_train_species, newdata = x_test_species, type = "prob")
-rf_pred_species <- predict(rf_train_species, newdata = x_test_species)%>%as.data.frame()
-names(rf_pred_species) <- "pred"
-#to calucate AUC
-comb <- cbind(y_test_species,rf_pred_prob_species,rf_pred_species)%>%as.data.frame()
-names(comb)[1] <- "obs"
-comb$obs <- as.factor(comb$obs)
-comb$pred <- as.factor(comb$pred)
-comb$no <- as.numeric(comb$no)
-comb$yes <- as.numeric(comb$yes)
-pred <- ROCR::prediction(comb[,3], comb[,1])
-auc <- ROCR::performance(pred,"auc")@y.values[[1]]
-print(auc)
-imp_fea_species <- as.data.frame(rf_train_species$importance)
-imp_fea_species <- imp_fea_species%>%rownames_to_column("species")%>%
-   dplyr::select(species,MeanDecreaseAccuracy, MeanDecreaseGini)%>%dplyr::arrange(desc(MeanDecreaseGini))
-
-#subtype+species
-train_set_subtype_species <- window_db_sel_subtype_species_meta %>% filter(Study!="validation")%>%
-   dplyr::select(-Study,-subtype_median,-subtype_Richness,-subtype_Shannon,-species_median,-species_Richness,-species_Shannon)
-x_train_subtype_species <- train_set_subtype_species%>%dplyr::select(-nec)%>%column_to_rownames("SequenceID")%>%dplyr::select(sort(names(.)))
-y_train_subtype_species <- as.factor(train_set_subtype_species$nec)
-set.seed(1000)
-rf_train_subtype_species <- randomForest(x=x_train_subtype_species,y=y_train_subtype_species, importance = TRUE, ntree = 500, proximity = TRUE,mtry=vali_subtype_species_sel$mtry)
-test_set_subtype_species <- window_db_sel_subtype_species_meta %>% filter(Study=="validation")%>%
-   dplyr::select(-Study,-subtype_median,-subtype_Richness,-subtype_Shannon,-species_median,-species_Richness,-species_Shannon)
-x_test_subtype_species <- test_set_subtype_species%>%dplyr::select(-nec)%>%column_to_rownames("SequenceID")%>%dplyr::select(sort(names(.)))
-y_test_subtype_species <- test_set_subtype_species$nec
-rf_pred_prob_subtype_species <- predict(rf_train_subtype_species, newdata = x_test_subtype_species, type = "prob")
-rf_pred_subtype_species <- predict(rf_train_species, newdata = x_test_species)%>%as.data.frame()
-names(rf_pred_subtype_species) <- "pred"
-#to calucate AUC
-comb <- cbind(y_test_subtype_species,rf_pred_prob_subtype_species,rf_pred_subtype_species)%>%as.data.frame()
-names(comb)[1] <- "obs"
-comb$obs <- as.factor(comb$obs)
-comb$pred <- as.factor(comb$pred)
-comb$no <- as.numeric(comb$no)
-comb$yes <- as.numeric(comb$yes)
-pred <- ROCR::prediction(comb[,3], comb[,1])
-auc <- ROCR::performance(pred,"auc")@y.values[[1]]
-print(auc)
-imp_fea_subtype_species <- as.data.frame(rf_train_subtype_species$importance)
-imp_fea_subtype_species <- imp_fea_subtype_species%>%rownames_to_column("subtype_species")%>%
-   dplyr::select(subtype_species,MeanDecreaseAccuracy, MeanDecreaseGini)%>%dplyr::arrange(desc(MeanDecreaseGini))
-
-#combined three type of featurs
-rf_pred_prob_subtype_df <- rf_pred_prob_subtype%>%as.data.frame()%>%dplyr::select(yes)%>%setNames("subtype")%>%rownames_to_column("SequenceID")
-rf_pred_prob_species_df <- rf_pred_prob_species%>%as.data.frame()%>%dplyr::select(yes)%>%setNames("species")%>%rownames_to_column("SequenceID")
-rf_pred_prob_subtype_species_df <- rf_pred_prob_subtype_species%>%as.data.frame()%>%dplyr::select(yes)%>%setNames("subtype_species")%>%rownames_to_column("SequenceID")
-rf_pred_prob_cb <- left_join(window_db_sel_subtype_meta%>%filter(Study=="validation")%>%dplyr::select(SequenceID,nec),rf_pred_prob_subtype_df,by="SequenceID")
-rf_pred_prob_cb <- left_join(rf_pred_prob_cb,rf_pred_prob_species_df,by="SequenceID")
-rf_pred_prob_cb <- left_join(rf_pred_prob_cb,rf_pred_prob_subtype_species_df,by="SequenceID")
-rocobj_list <- roc(nec ~ subtype+species+subtype_species,ci=T,smooth=F,data=rf_pred_prob_cb)
-rocobj_list$subtype$auc
-# Area under the curve: 0.8182
-rocobj_list$subtype$ci
-# 95% CI: 0.6276-1 (DeLong)
-rocobj_list$species$auc
-# Area under the curve: 0.7424
-rocobj_list$species$ci
-# 95% CI: 0.5173-0.9675 (DeLong)
-rocobj_list$subtype_species$auc
-# Area under the curve: 0.8384
-rocobj_list$subtype_species$ci
-# 95% CI: 0.6559-1 (DeLong)
-
-ci_list <- lapply(rocobj_list, ci.se, specificities = seq(0, 1, 0.01))
-ci_list_df <- lapply(ci_list, function(ciobj)
-   data.frame(prop = as.numeric(rownames(ciobj)),
-              lower = ciobj[, 1],
-              upper = ciobj[, 3]))
-#Figure 5e
-plot_curve <- ggroc(rocobj_list,size=0.5,legacy.axes =T)+
-   scale_colour_manual(values = c("#0B74BA", "#42A90C", "#CC2B0A"))+
-   geom_segment(aes(x=0, y=0, xend=1, yend=1),colour="grey",linetype = "dashed")+
-   # geom_ribbon(data=data_ci_cb,aes(x=1-prop,ymin=`2.5%`,ymax=`97.5%`,fill=type),alpha=0.5)+
-   theme_bw()+
-   labs(x ="False positive rate", y="True positive rate")+
-   theme(plot.margin = unit(c(1,5,1,1), "mm"))+
-   theme(panel.border = element_rect(colour = "black",linewidth = 1),
-         panel.grid = element_blank())+
-   theme(panel.background = element_blank(),
-         plot.background = element_blank(),
-         legend.position = "right",
-         legend.text = element_text(size=10, colour = "black"),
-         axis.text.y = element_text(size=12, colour="black"),
-         axis.text.x = element_text(size=12, colour="black"),
-         axis.title.x = element_text(size=12, colour = "black"))
-for(i in 1:3) {
-   plot_curve <- plot_curve + geom_ribbon(
-      data = ci_list_df[[i]],
-      aes(x = 1-prop, ymin = lower, ymax = upper),
-      fill = i + 1,
-      alpha = 0.1,
-      inherit.aes = F) 
-} 
-
+                                                
 #feature importance: subtype
 window_db_sel_subtype_pval_1 <- read.csv("data/window_db_sel_subtype_pval_1.csv")
 window_db_sel_subtype_pval_1$fdr <- p.adjust(window_db_sel_subtype_pval_1$pval_lm,method = "fdr")
 window_db_sel_subtype_pval_1_0.05 <- window_db_sel_subtype_pval_1%>%filter(fdr<0.05)
-which(!window_db_sel_subtype_pval_1_0.05$subtype%in%imp_fea_subtype$subtype)
 imp_fea_subtype_sel <- imp_fea_subtype%>%mutate(rank=rownames(.))%>%filter(subtype%in%window_db_sel_subtype_pval_1_0.05$subtype)
 imp_fea_subtype_sel$subtype <- gsub("subtype_","",imp_fea_subtype_sel$subtype,fixed = T)
 imp_fea_subtype_sel$subtype <- gsub("other_peptide_antibiotics","OPA",imp_fea_subtype_sel$subtype,fixed = T)
