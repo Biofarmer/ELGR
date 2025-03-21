@@ -150,31 +150,14 @@ bt_feature_cb_sum
 # 2 subtype         0.826  0.823 0.803 0.859  0.819   0.834
 # 3 subtype_species 0.806  0.798 0.778 0.838  0.797   0.815
 
-#bootstrapping on samples
-bt_sample <- read.csv("data/auc_rep_sample.csv",check.names=FALSE,stringsAsFactors = FALSE)
-bt_sample_cb <- rbind.fill(bt_sample,vali_subtype_sel%>%mutate(group="subtype",seed="all"),
-                           vali_species_sel%>%mutate(group="species",seed="all"),
-                            vali_subtype_species_sel%>%mutate(group="subtype_species",seed="all"))
-bt_sample_cb_sum <- bt_sample_cb%>%group_by(group)%>%dplyr::summarise(mean=mean(auc),median=median(auc),
-                                                                        q25=quantile(auc)[2],q75=quantile(auc)[4],
-                                                                        CI_low=CI(auc)[3],CI_high=CI(auc)[1])
-bt_sample_cb_sum
-# group            mean median   q25   q75 CI_low CI_high
-# <chr>           <dbl>  <dbl> <dbl> <dbl>  <dbl>   <dbl>
-# 1 species         0.704  0.707 0.641 0.758  0.688   0.721
-# 2 subtype         0.786  0.793 0.753 0.828  0.774   0.798
-# 3 subtype_species 0.771  0.778 0.737 0.813  0.759   0.783
+bt_feature_all <- bt_feature_cb%>%filter(seed=="all")
 
-bt_feature_sample <- rbind.fill(bt_feature_cb%>%mutate(group2="Bootstrapping on features"),
-                                bt_sample_cb%>%mutate(group2="Bootstrapping on samples"))
-bt_feature_sample_seed <- bt_feature_sample%>%filter(seed!="all")
-bt_feature_sample_all <- bt_feature_sample%>%filter(seed=="all")
 #Figure 5e
-auc_feature_sample <- ggplot(bt_feature_sample_seed, aes(x=group, y=auc,fill=group)) +
-   geom_boxplot(outlier.size = 0.8,width=0.6)+
+auc <- ggplot(bt_feature_cb, aes(x=group, y=auc,fill=group)) +
+   geom_boxplot(outlier.size = 0.8)+
+   geom_point(size=0.8)+
    geom_jitter(size=0.8,width = 0.3)+
-   geom_point(data =bt_feature_sample_all, aes(x=group, y=auc),shape=23,color="#B41707",fill="#B41707")+
-   facet_wrap(~group2)+
+   geom_point(data =bt_feature_all, aes(x=group, y=auc),shape=23,color="#B41707",fill="#B41707")+
    scale_fill_manual(values = c("#8DD3C7","#BEBADA","#FB8072"))+
    scale_x_discrete(labels=c("species"="Species","subtype"="ARGs","subtype_species"="Both"))+
    scale_y_continuous(limits = c(0.4,1.1))+
@@ -185,9 +168,8 @@ auc_feature_sample <- ggplot(bt_feature_sample_seed, aes(x=group, y=auc,fill=gro
    theme(panel.background = element_blank(),
          plot.background = element_blank(),
          legend.position = "none",
-         strip.text = element_text(size=12, colour = "black"),
-         axis.text = element_text(size=12, colour = "black"),
-         axis.title.y = element_text(size=12, colour = "black"))
+         axis.text = element_text(size=14, colour = "black"),
+         axis.title.y = element_text(size=14, colour = "black"))
 
 #subtype
 window_db_subtype <- read.csv("data/window_db_subtype_new.csv",check.names=FALSE,stringsAsFactors = FALSE)#1382 runs
