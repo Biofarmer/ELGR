@@ -173,7 +173,7 @@ amr_beta_df.plot <- tibble(Axis1 = amr_beta_pco.tabble$V1,
                            Sample_ID = amr_beta_pco.tabble$SubjectID,
                            Time=amr_beta_pco.tabble$month)
 amr_beta_df.plot <- amr_beta_df.plot%>%group_by(Time)%>%dplyr::mutate(Time2=cur_group_id())
-#Supplementary Figure 8b 
+#Supplementary Figure 9b 
 amr_beta_time_p <- ggplot(data=amr_beta_df.plot,aes(x=Axis1, y=Axis2, col=Time2)) +
    geom_point(size=1.5, alpha=1) + 
    scale_color_gradient2(midpoint=5, low="dodgerblue4", mid="bisque",high="orangered3", space ="Lab",
@@ -241,7 +241,7 @@ subtype_adonis_strata_sel$covariates[subtype_adonis_strata_sel$covariates=="Gend
 subtype_adonis_strata_sel_2 <- subtype_adonis_strata_sel%>%dplyr::select(-fdr)%>%column_to_rownames("covariates")%>%t()%>%as.data.frame()
 subtype_adonis_strata_sel_2 <- rbind(rep(60,9),rep(0,9),subtype_adonis_strata_sel_2)
 
-#Supplementary Figure 8c
+#Supplementary Figure 9c
 radarchart(subtype_adonis_strata_sel_2, axistype=0, seg=3,
            #custom polygon
            pcol="#C62916", pfcol=NA, plwd=2, 
@@ -265,7 +265,7 @@ amr_adonis_strata_sel$covariates[amr_adonis_strata_sel$covariates=="Gender"] <- 
 amr_adonis_strata_sel_2 <- amr_adonis_strata_sel%>%dplyr::select(-fdr)%>%column_to_rownames("covariates")%>%t()%>%as.data.frame()
 amr_adonis_strata_sel_2 <- rbind(rep(60,9),rep(0,9),amr_adonis_strata_sel_2)
 
-#Supplementary Figure 9a
+#Supplementary Figure 10a
 radarchart(amr_adonis_strata_sel_2, axistype=0, seg=3,
            #custom polygon
            pcol="#C62916", pfcol=NA, plwd=2, 
@@ -275,7 +275,7 @@ radarchart(amr_adonis_strata_sel_2, axistype=0, seg=3,
            vlcex=0.8)
 
 cor.test(preterm_metadata$Gestational_age,preterm_metadata$Birth_weight)#r = 0.87401, p-value < 2.2e-16
-#Supplementary Figure 9b
+#Supplementary Figure 10b
 corr_gestation_birthweight <- ggplot(preterm_metadata, aes(x=Gestational_age, y=Birth_weight)) +
    geom_point(shape=21,color=alpha("black",0.5),fill=alpha("black",0.5),size=2)+
    geom_smooth(method=lm, formula =  y ~ poly(x,1), level=0,colour="#DA732D",linewidth=2) +
@@ -488,7 +488,7 @@ amr_covar_contri_cb_sel_sig <- amr_covar_contri_cb_sel%>%filter(p_adj<0.05)
 amr_covar_contri_cb_sel$covariates <- factor(amr_covar_contri_cb_sel$covariates,
                                              levels = rev(c("Birth_weight_2","Gestational_age_2","Infant_AB","Feed_2","Gender",
                                                             "Delivery","Country")))
-#Supplementary Figure 8d
+#Supplementary Figure 9d
 amr_covariates <- ggplot()+
    geom_tile(data=amr_covar_contri_cb_sel,aes(x=month_2, y=covariates),fill="white",color="white",linewidth = 0.5)+
    geom_point(data=amr_covar_contri_cb_sel,aes(x=month_2, y=covariates,size=r2, fill=covariates),shape=21)+
