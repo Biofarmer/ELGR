@@ -270,8 +270,7 @@ amr_profile_coverm_gene_2_top_p <- ggplot() +
    coord_flip()
 
 #compare ARG subtypes and ARGs from amr
-amr_profile_coverm_aro_sum_modifiy <- read_excel("~/Desktop/work/preterm/analysis/revision/figure/profile/amr_profile_coverm_aro_sum.xlsx", 
-                                                 sheet = "Sheet1")
+amr_profile_coverm_aro_sum_modifiy <- read_excel("data/amr_profile_coverm_aro_sum.xlsx", sheet = "Sheet1")
 amr_profile_coverm_aro_sum_modifiy$Element_symbol_2 <- tolower(amr_profile_coverm_aro_sum_modifiy$Element_symbol_2)
 preterm_subtype_sum$gene <- sapply(strsplit(preterm_subtype_sum$subtype, split='__', fixed=TRUE), function(x)(x[2]))
 preterm_subtype_sum$gene_2 <- tolower(preterm_subtype_sum$gene)
