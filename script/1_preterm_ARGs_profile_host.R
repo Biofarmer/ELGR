@@ -28,7 +28,7 @@ preterm_metadata_month$ymax <- cumsum(preterm_metadata_month$n)
 preterm_metadata_month$aa <- as.factor(preterm_metadata_month$aa)
 preterm_metadata_month$month <- factor(preterm_metadata_month$month,levels = rev(preterm_metadata_month$month))
 
-#Supplementary Figure 1a
+#Supplementary Figure 2a
 preterm_month <- ggplot(data=preterm_metadata_month,aes(x=aa, y=n,fill=month)) +
    geom_bar(stat="identity",width = 0.7)+
    theme_bw()+
@@ -138,7 +138,7 @@ type_dynamic_pvalue <- data.frame("type"="x","p_val"=0,stringsAsFactors=F)[-1,]
 col_list <- c("#8DD3C7", "#D0D046", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462",
               "#B3DE69", "#FCCDE5", "#BBEBF6", "#BC80BD", "#CCEBC5","#FFED6F")
 count=0
-#Supplementary Figure 7
+#Supplementary Figure 8
 for (v in levels(preterm_type_2_meta_g_sum_sel$type)) {
    # v="bacitracin"
    count=count+1
@@ -244,7 +244,7 @@ amr_profile_coverm_aro_sum_se$se <- as.numeric(amr_profile_coverm_aro_sum_se$se)
 amr_profile_coverm_gene_2_top <- amr_profile_coverm_aro_sum_se%>%filter(prevalence>0.1)
 amr_profile_coverm_gene_2_top$Element_symbol <- factor(amr_profile_coverm_gene_2_top$Element_symbol,levels = rev(amr_profile_coverm_gene_2_top$Element_symbol))
 amr_profile_coverm_gene_2_top$label <- paste0("(n=",formattable::comma(amr_profile_coverm_gene_2_top$n,digits=0),")")
-#Supplementary Figure 1d
+#Supplementary Figure 2d
 amr_profile_coverm_gene_2_top_p <- ggplot() +
    geom_bar(data=amr_profile_coverm_gene_2_top, aes(x=Element_symbol, y=Mean_rpkm),stat="identity",fill="#C48849",color="black",width = 0.8)+
    geom_errorbar(data=amr_profile_coverm_gene_2_top,aes(x=Element_symbol,ymin=Mean_rpkm, ymax=Mean_rpkm+se), width=0.5)+
@@ -278,7 +278,7 @@ preterm_subtype_sum$gene_2 <- tolower(preterm_subtype_sum$gene)
 preterm_subtype_sum_aro_2 <- amr_profile_coverm_aro_sum_modifiy%>%filter(Element_symbol_2%in%preterm_subtype_sum$gene_2)%>%
    left_join(.,preterm_subtype_sum%>%dplyr::select(subtype,prevalence,gene,gene_2),by=c("Element_symbol_2"="gene_2"))
 cor.test(preterm_subtype_sum_aro_2$prevalence.y,preterm_subtype_sum_aro_2$prevalence.x)#0.7680642, p-value < 2.2e-16
-#Supplementary Figure 1c
+#Supplementary Figure 2c
 corr_subtype_amr_gene <- ggplot(preterm_subtype_sum_aro_2, aes(x=prevalence.y, y=prevalence.x)) +
    geom_point(shape=21,color=alpha("black",0.5),fill=alpha("black",0.5),size=2)+
    geom_smooth(method=lm, formula =  y ~ poly(x,1), level=0,colour="#DA732D",linewidth=2) +
@@ -336,7 +336,7 @@ amr_profile_coverm_3_se$drug[amr_profile_coverm_3_se$drug=="streptogramin b"] <-
 amr_profile_coverm_3_se$drug[amr_profile_coverm_3_se$drug=="streptogramin a"] <- "streptogramin A"
 amr_profile_coverm_3_se$drug[amr_profile_coverm_3_se$drug=="virginiamycin m"] <- "virginiamycin M"
 amr_profile_coverm_3_se$drug <- factor(amr_profile_coverm_3_se$drug,levels = amr_profile_coverm_3_se$drug)
-#Supplementary Figure 1e
+#Supplementary Figure 2e
 amr_drug_class_p <- ggplot() +
    geom_bar(data=amr_profile_coverm_3_se, aes(x=drug, y=Mean_rpkm),stat="identity",fill="#C48849",color="black",width = 0.8)+
    geom_errorbar(data=amr_profile_coverm_3_se,aes(x=drug,ymin=Mean_rpkm, ymax=Mean_rpkm+se), width=0.5)+
@@ -380,7 +380,7 @@ amr_profile_coverm_2_sum_1_meta_g_sum_sel$drug[amr_profile_coverm_2_sum_1_meta_g
 amr_profile_coverm_2_sum_1_meta_g_sum_sel$month <- factor(amr_profile_coverm_2_sum_1_meta_g_sum_sel$month,levels = c(0.25,0.5,0.75,1,2,3,6,12,18,36))
 amr_profile_coverm_2_sum_1_meta_g_sum_sel_sum <- amr_profile_coverm_2_sum_1_meta_g_sum_sel%>%group_by(drug)%>%dplyr::summarise(mean=mean(mean_abun))%>%arrange(desc(mean))
 amr_profile_coverm_2_sum_1_meta_g_sum_sel$drug <- factor(amr_profile_coverm_2_sum_1_meta_g_sum_sel$drug,levels = amr_profile_coverm_2_sum_1_meta_g_sum_sel_sum$drug)
-#Supplementary Figure 8a
+#Supplementary Figure 9a
 dynamic_amr <- ggplot(amr_profile_coverm_2_sum_1_meta_g_sum_sel, aes(x=month, y=mean_abun, fill=drug)) + 
    geom_bar(stat = "identity", width=0.8)+
    scale_fill_manual(values = c("#8DD3C7", "#D0D046", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462",
@@ -425,7 +425,7 @@ preterm_amr_only1_sum_subtype <- rbind(preterm_amr_only1_sum%>%mutate(group="Ass
 preterm_amr_only1_sum_subtype$Study <- factor(preterm_amr_only1_sum_subtype$Study,levels = rev(c(as.character(preterm_subtype_only1_sum$Study),
                                                                                                  "RoseG_2017","RahmanSF_2018")))
 preterm_amr_only1_sum_subtype$group <- factor(preterm_amr_only1_sum_subtype$group,levels = c("ARG subtypes","Assembled ARGs"))
-#Supplementary Figure 1f
+#Supplementary Figure 2f
 subtype_amr_only_p <- ggplot(data=preterm_amr_only1_sum_subtype, aes(x=total, y=Study,fill=group)) +
    geom_bar(stat="identity",color="black",width = 0.8)+
    facet_wrap(~group,scales = "free_x")+
@@ -444,7 +444,7 @@ subtype_amr_only_p <- ggplot(data=preterm_amr_only1_sum_subtype, aes(x=total, y=
          axis.title.y = element_blank(),
          axis.title.x = element_blank())
 
-#Supplementary Figure 1g
+#Supplementary Figure 2g
 subtype_only_p_2 <- ggplot(preterm_subtype_only1, aes(x=clean_reads_2, y=n)) +
    geom_point(size=1,color="#4994C4")+
    geom_smooth(method=lm, formula =  y ~ poly(x,1), level=0,colour="grey",linewidth=1)+
@@ -462,7 +462,7 @@ subtype_only_p_2 <- ggplot(preterm_subtype_only1, aes(x=clean_reads_2, y=n)) +
          axis.text.x = element_text(size=8, colour="black"),
          axis.title.y = element_text(size=8, colour="black"),
          axis.title.x = element_blank())
-#Supplementary Figure 1g
+#Supplementary Figure 2g
 amr_only_p_2 <- ggplot(preterm_amr_only1, aes(x=clean_reads_2, y=n)) +
    geom_point(size=1,color="#C48849")+
    geom_smooth(method=lm, formula =  y ~ poly(x,1), level=0,colour="grey",linewidth=1)+
@@ -487,7 +487,7 @@ amr_gene_richness_2 <- amr_profile_coverm%>%group_by(sample,Element_symbol)%>%dp
 preterm_subtype_richness_amr <- left_join(preterm_subtype_richness,amr_gene_richness_2,by="sample")
 preterm_subtype_richness_amr$gene_richness[is.na(preterm_subtype_richness_amr$gene_richness)] <- 0
 cor.test(preterm_subtype_richness_amr$gene_richness,preterm_subtype_richness_amr$subtype_richness)#0.4285148, p-value < 2.2e-16
-#Supplementary Figure 1b
+#Supplementary Figure 2b
 corr_subtype_amr <- ggplot(preterm_subtype_richness_amr, aes(x=subtype_richness, y=gene_richness)) +
    geom_point(shape=21,color=alpha("black",0.5),fill=alpha("black",0.5),size=2)+
    geom_smooth(method=lm, formula =  y ~ poly(x,1), level=0,colour="#DA732D",linewidth=2) +
@@ -574,7 +574,7 @@ tax_number[6,] <- c("Species",length(table(amr_profile_stats$species))-1,sum(tab
 tax_number$n_tax <- as.numeric(tax_number$n_tax)
 tax_number$n_args <- as.numeric(tax_number$n_args)
 tax_number$tax <- factor(tax_number$tax,levels = c("Phylum", "Class","Order","Family","Genus","Species"))
-#Supplementary Figure 2b
+#Supplementary Figure 3b
 tax_number_plot <- ggplot(tax_number, aes(x=tax, y=n_tax)) + 
    geom_bar(stat = "identity",fill="#72A8C4",color="black",width = 0.8)+
    geom_text(aes(label=paste0("(n=",formattable::comma(n_tax,digits=0),"; n=",formattable::comma(n_args,digits=0),")"),hjust=-0.1,size=6))+
@@ -616,7 +616,7 @@ tax_diver_2$name <- gsub(".__","",tax_diver_2$name)
 tax_diver_2$taxonomy <- paste(toupper(substr(tax_diver_2$taxonomy, 1, 1)), substr(tax_diver_2$taxonomy, 2, nchar(tax_diver_2$taxonomy)), sep="")
 tax_diver_2$taxonomy <- factor(tax_diver_2$taxonomy,levels = c("Domain","Phylum", "Class","Order","Family","Genus"))
 tax_diver_2$new_t <- factor(tax_diver_2$new_t, levels = c("1","12","11","10","9","8","7","6","5","4","3","2"))
-#Supplementary Figure 2a
+#Supplementary Figure 3a
 amr_taxa_all <- ggplot(tax_diver_2, aes(x=taxonomy, y=n, fill=new_t)) + 
    geom_bar(stat = "identity", width=0.8)+
    scale_fill_manual(values = c("#CACACA","#8F8F8F","#6AABF5","#BEBADA","#FB8072","#80B1D3","#FDB462",
@@ -695,7 +695,6 @@ amr_taxa_species <- ggplot() +
 #################################################################################################################################################
 #plasmid
 #################################################################################################################################################
-#compare the 
 amr_profile_stats$bin[is.na(amr_profile_stats$bin)] <- "nobin"
 amr_profile_stats_unknown_taxa <- amr_profile_stats%>%filter(bin=="nobin")
 amr_profile_stats_unknown_taxa_sum <- amr_profile_stats_unknown_taxa%>%
@@ -711,7 +710,7 @@ amr_profile_stats_unknown_known <- rbind(amr_profile_stats_unknown_taxa_sum,amr_
 plas_preterm_sum <- amr_profile_stats%>%group_by(plasmid)%>%dplyr::summarise(n=n())
 amr_profile_stats_plasmid <- amr_profile_stats%>%filter(plasmid=="Yes")
 amr_profile_stats_plasmid_nospecies <- amr_profile_stats%>%filter(plasmid=="Yes")%>%filter(domain=="d__Bacteria")%>%filter(species=="unknown")
-#Supplementary Figure 3a
+#Supplementary Figure 4a
 pie(plas_preterm_sum$n,
     labels = c("Chromosome \n(n=53,791)","Plasmid \n(n=26,735)"),
     col = c("#A8DFFC","#F7A48F"),
@@ -746,50 +745,6 @@ plas_sum_species_chom <- plas_sum_species%>%filter(prediction=="No")%>%arrange(d
 plas_sum_species_chom_sel <- plas_sum_species_chom%>%filter(args_n>1)
 plas_sum_species_plasmid <- plas_sum_species%>%filter(prediction=="Yes")%>%arrange(desc(args_n))%>%filter(args_n>1)
 plas_sum_species_both <- plas_sum_species%>%filter(pred_n==2)
-
-plas_tax_number <- data.frame("tax"="x","n_tax"=0,stringsAsFactors = F)[-1,]
-plas_tax_number[1,] <- c("Chromosome",248)
-plas_tax_number[2,] <- c("Both",123)
-plas_tax_number[3,] <- c("Plasmid",5)
-plas_tax_number$n_tax <- as.numeric(plas_tax_number$n_tax)
-#Supplementary Figure 3b
-pie(plas_tax_number$n_tax,
-    labels = c("Chromosome \n(n=248)","Both \n(n=123)","Plasmid \n(n=5)"),
-    col = c("#A8DFFC","#ACFCA8","#F7A48F"),
-    init.angle=30, radius = 1,cex=1)
-
-plas_sum_species_both_sel <- plas_sum_species_both%>%filter(args_n>50)
-plas_sum_species_both_sel$taxa <- gsub("s__","",plas_sum_species_both_sel$taxa,fixed = T)
-plas_sum_species_both_sel$chrom_prop <- plas_sum_species_both_sel$args_n_chrom/plas_sum_species_both_sel$args_n
-plas_sum_species_both_sel$plasmid_prop <- plas_sum_species_both_sel$args_n_plasmid/plas_sum_species_both_sel$args_n
-plas_sum_species_both_sel <- plas_sum_species_both_sel%>%arrange(desc(plasmid_prop))
-plas_sum_species_both_sel_1 <- plas_sum_species_both_sel%>%dplyr::select(-c(2,3,4,6,8))%>%setNames(c("taxa","n_args","n_prop"))%>%mutate(status="chrom")
-plas_sum_species_both_sel_2 <- plas_sum_species_both_sel%>%dplyr::select(-c(2,3,4,5,7))%>%setNames(c("taxa","n_args","n_prop"))%>%mutate(status="plasmid")
-plas_sum_species_both_sel_3 <- rbind(plas_sum_species_both_sel_1,plas_sum_species_both_sel_2)
-plas_sum_species_both_sel_3$text <- paste0("(n=",formattable::comma(plas_sum_species_both_sel_3$n_args,format = "d"),")")
-plas_sum_species_both_sel_3$text <- gsub(" ","",plas_sum_species_both_sel_3$text,fixed = T)
-plas_sum_species_both_sel_3$taxa <- factor(plas_sum_species_both_sel_3$taxa,levels = plas_sum_species_both_sel$taxa)
-plas_sum_species_both_sel_3 <- plas_sum_species_both_sel_3%>%mutate(position=case_when(status=="chrom" ~ 0.75,
-                                                                                       status=="plasmid" ~ 0.01))
-#Supplementary Figure 3c
-plasmid_proportion <- ggplot(data=plas_sum_species_both_sel_3, aes(x=taxa, y=n_prop, fill=status)) +
-   geom_bar(stat="identity")+
-   geom_hline(yintercept = 0.5,linetype="dashed", color = "grey")+
-   geom_text(aes(label=text,y=position),hjust=-0.05,size=3,angle=90)+
-   scale_fill_manual(values = c("#A8DFFC","#F7A48F"),label=c("chrom"="Chromosome","plasmid"="Plasmid"))+
-   scale_y_continuous(expand = c(0,0))+
-   labs(y = "Proportion")+
-   theme_bw()+
-   theme(panel.grid.minor = element_blank(),axis.line = element_blank(),panel.grid.major = element_line(linewidth = 1),
-         panel.border = element_rect(colour = "black",linewidth = 1.5))+
-   theme(legend.text = element_text(size=16),
-         aspect.ratio = 1/6,
-         legend.position = "top",
-         axis.text.y = element_text(size=12, colour = "black"),
-         axis.text.x = element_text(size=12, colour = "black",face="italic",angle = 90,hjust = 1,vjust = 0.5),
-         axis.title.x = element_blank(),
-         plot.margin = unit(c(1,1,1,1), "cm"),
-         axis.title.y = element_text(size=14, colour = "black"))
 
 #############################################################################################################################
 #cluster of arg orfs from plasmid
@@ -835,7 +790,7 @@ cluster_sum_sel_species_sum_sel$n_args_2 <- as.numeric(cluster_sum_sel_species_s
 cluster_sum_sel_species_s <- spread(cluster_sum_sel_species_sum_sel,species,n_args_2)%>%column_to_rownames("clstr")
 cluster_sum_sel_species_s[is.na(cluster_sum_sel_species_s)] <- 0
 col_fun_type <- colorRamp2(c(0,3,10,20,30,50,100),c("white","#A8C6EC","#7FA4D3","#5A87BF","#3768A4","#184B8A","#073876"))
-#Supplementary Figure 3d
+#Supplementary Figure 4d
 plasmid_cluster <- Heatmap(as.matrix(cluster_sum_sel_species_s),cluster_rows=T,cluster_columns=T,col = col_fun_type,
                            show_row_names = T,show_column_names = T,
                            border = T,row_names_gp = gpar(fontsize =10),
@@ -846,7 +801,7 @@ plasmid_cluster <- Heatmap(as.matrix(cluster_sum_sel_species_s),cluster_rows=T,c
                            show_heatmap_legend = TRUE,
                            heatmap_legend_param = list(title = "Number of ARG ORFs",direction = "horizontal", 
                                                        legend_height = unit(0.3, "cm"),legend_width = unit(4, "cm"),
-                                                       at = c(0,5,20,30,50,100), labels = c("0","5","20","30","50","≥100"))
+                                                       at = c(0,5,20,30,50,100), labels = c("0","5","20","30","50",">100"))
 )
 
 
