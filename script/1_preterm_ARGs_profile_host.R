@@ -789,7 +789,7 @@ cluster_sum_sel_species_sum_sel$n_args_2 <- as.numeric(cluster_sum_sel_species_s
 cluster_sum_sel_species_s <- spread(cluster_sum_sel_species_sum_sel,species,n_args_2)%>%column_to_rownames("clstr")
 cluster_sum_sel_species_s[is.na(cluster_sum_sel_species_s)] <- 0
 col_fun_type <- colorRamp2(c(0,3,10,20,30,50,100),c("white","#A8C6EC","#7FA4D3","#5A87BF","#3768A4","#184B8A","#073876"))
-#Supplementary Figure 4d
+#Supplementary Figure 4b
 plasmid_cluster <- Heatmap(as.matrix(cluster_sum_sel_species_s),cluster_rows=T,cluster_columns=T,col = col_fun_type,
                            show_row_names = T,show_column_names = T,
                            border = T,row_names_gp = gpar(fontsize =10),
