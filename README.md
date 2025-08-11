@@ -3,7 +3,7 @@
 (2)The description and the output for each script.
 1_preterm_ARGs_profile_host.R
 This script is used to analyze the composition and host of ARGs in preterm infants, including
-Figure 1b, Figure 1c, Figure 1d, Figure 4d, Supplementary Figure 2a, Supplementary Figure 2b, Supplementary Figure 2c, Supplementary Figure 2d, Supplementary Figure 2e, Supplementary Figure 2f, Supplementary Figure 2g, Supplementary Figure 3a, Supplementary Figure 3b, Supplementary Figure 4a, Supplementary Figure 4b, Supplementary Figure 4c, Supplementary Figure 4d, Supplementary Figure 8, Supplementary Figure 9a.
+Figure 1b, Figure 1c, Figure 1d, Figure 4d, Supplementary Figure 2a, Supplementary Figure 2b, Supplementary Figure 2c, Supplementary Figure 2d, Supplementary Figure 2e, Supplementary Figure 2f, Supplementary Figure 2g, Supplementary Figure 3a, Supplementary Figure 3b, Supplementary Figure 4a, Supplementary Figure 4b, Supplementary Figure 8, Supplementary Figure 9a.
 
 2_term_ARGs_profile_host_comparisonWithpreterm.R
 This script is used to analyze the composition and host of ARGs in full-term infants, and also the comparisons between preterm and full-term infants, including Figure 2a, Figure 2b, Figure 2c, Figure 2d, Figure 2e, Figure 2f, Figure 2g, Figure 3, Supplementary Figure 5a, Supplementary Figure 5b, Supplementary Figure 5c, Supplementary Figure 5d, Supplementary Figure 5e, Supplementary Figure 6a, Supplementary Figure 6b, Supplementary Figure 6c, Supplementary Figure 6d, Supplementary Figure 6e, Supplementary Figure 6f, Supplementary Figure 7a, Supplementary Figure 7b.
