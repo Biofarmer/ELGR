@@ -70,7 +70,7 @@ alpha_amr_pval <- alpha_amr_pval%>%mutate_at(vars(-index,-comp1,-comp2),as.numer
 amr_alpha_meta_g <- amr_alpha_meta%>%dplyr::select(Richness,Shannon,SequenceID,nec2)%>%gather(.,group,value,-SequenceID,-nec2)
 amr_alpha_meta_g$group[amr_alpha_meta_g$group=="Shannon"] <- "Shannon index"
 amr_alpha_meta_g$nec2 <- factor(amr_alpha_meta_g$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10b
+#Supplementary Figure 11b
 amr_gene_alpha_p <- ggplot(data=amr_alpha_meta_g,aes(x=nec2, y=value, col=nec2)) +
    geom_boxplot(outlier.size = 0.1) + 
    stat_summary(fun.y=mean, geom="point",size=2, color="black")+
