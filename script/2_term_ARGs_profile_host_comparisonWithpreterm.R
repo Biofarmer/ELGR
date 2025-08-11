@@ -72,7 +72,7 @@ term_type_sum_abund <- left_join(term_type_sum_abund,metadata_cb%>%dplyr::select
 term_type_sum_abund$group <- "term"
 term_type_sum_se$type <- factor(term_type_sum_se$type,levels = c("multidrug","tetracycline","beta_lactam","polymyxin","MLS","bacitracin",
                                                            term_type_sum_se$type[7:26]))
-#Supplementary Figure 4a
+#Supplementary Figure 5a
 term_type_p <- ggplot() +
    geom_bar(data=term_type_sum_se, aes(x=type, y=Mean_copies_per_cell),stat="identity",fill="#E09137",color="black",width = 0.8)+
    geom_errorbar(data=term_type_sum_se,aes(x=type,ymin=Mean_copies_per_cell, ymax=Mean_copies_per_cell+se),width=0.5)+
@@ -258,28 +258,7 @@ preterm_full_richness <- ggplot(subtype_alpha, aes(x=Term, y=Richness)) +
          axis.title.y = element_text(size=12, colour = "black"),
          axis.title.x = element_blank())
 
-preterm_full_richness_day <- ggplot(subtype_alpha_month, aes(x=DOL, y=Richness,color=Term)) + 
-   geom_point(alpha=0.5,size=0.8)+
-   geom_smooth(method = loess,size=1.5,level=0.95)+
-   scale_color_manual(values = c("#4994C4","#E09137"),labels=c("preterm"="Preterm","full_term"="Term"))+
-   guides(color = guide_legend(reverse=T))+
-   labs(x ="Age (days)", y="Richness (number of ARG subtypes)")+
-   scale_x_continuous(limits = c(0,1500),breaks = c(0,500,1000,1500),labels=c("0","500","1,000","1,500"))+
-   theme_bw()+
-   theme(plot.margin = unit(c(1,5,1,1), "mm"))+
-   theme(panel.grid.minor = element_blank(),axis.line = element_blank(),
-         panel.border = element_rect(colour = "black",linewidth = 1))+
-   theme(panel.background = element_blank(),
-         plot.background = element_blank(),
-         legend.position = "none",
-         legend.text = element_text(size=10, colour = "black"),
-         axis.text.y = element_blank(),
-         axis.text.x = element_text(size=12, colour="black"),
-         axis.ticks.y = element_blank(),
-         axis.title.y = element_blank(),
-         axis.title.x = element_text(size=12, colour = "black"))
-
-#Supplementary Figure 4c
+#Supplementary Figure 5c
 preterm_full_shannon <- ggplot(subtype_alpha, aes(x=Term, y=Shannon)) +
    geom_violin(aes(fill=Term),alpha=1,trim=T)+
    geom_boxplot(width=0.1,outlier.size = 1)+
@@ -298,27 +277,6 @@ preterm_full_shannon <- ggplot(subtype_alpha, aes(x=Term, y=Shannon)) +
          axis.text.x = element_blank(),
          axis.title.y = element_text(size=12, colour = "black"),
          axis.title.x = element_blank())
-
-preterm_full_shannon_day <- ggplot(subtype_alpha_month, aes(x=DOL, y=Shannon,color=Term)) + 
-   geom_point(alpha=0.5,size=0.8)+
-   geom_smooth(method = loess,size=1.5,level=0.95)+
-   scale_color_manual(values = c("#4994C4","#E09137"),labels=c("preterm"="Preterm","full_term"="Term"))+
-   guides(color = guide_legend(reverse=T))+
-   labs(x ="Age (days)", y="Richness (number of ARG subtypes)")+
-   scale_x_continuous(limits = c(0,1500),breaks = c(0,500,1000,1500),labels=c("0","500","1,000","1,500"))+
-   theme_bw()+
-   theme(plot.margin = unit(c(1,5,1,1), "mm"))+
-   theme(panel.grid.minor = element_blank(),axis.line = element_blank(),
-         panel.border = element_rect(colour = "black",linewidth = 1))+
-   theme(panel.background = element_blank(),
-         plot.background = element_blank(),
-         legend.position = "none",
-         legend.text = element_text(size=10, colour = "black"),
-         axis.text.y = element_blank(),
-         axis.text.x = element_text(size=12, colour="black"),
-         axis.ticks.y = element_blank(),
-         axis.title.y = element_blank(),
-         axis.title.x = element_text(size=12, colour = "black"))
 
 #differential subtypes
 term_preterm_subtype_pval <- data.frame("subtype"="x","term_mean"=0,"term_se"=0,"term_prevalence"=0,"term_median"=0,
@@ -533,7 +491,7 @@ amr_alpha_month$Term <- as.factor(amr_alpha_month$Term)
 amr_alpha_month$Study <- as.factor(amr_alpha_month$Study)
 anova(lmerTest::lmer(Richness ~ Term+(1|month)+(1|Study)+(1|st_subjectID),data =amr_alpha_month))
 anova(lmerTest::lmer(Shannon ~ Term+(1|month)+(1|Study)+(1|st_subjectID),data =amr_alpha_month))
-#Supplementary Figure 5a
+#Supplementary Figure 6a
 preterm_full_richness_amr <- ggplot(amr_alpha, aes(x=Term, y=Richness)) +
    geom_violin(aes(fill=Term),alpha=1,trim=T)+
    geom_boxplot(width=0.1,outlier.size = 1)+
@@ -553,28 +511,7 @@ preterm_full_richness_amr <- ggplot(amr_alpha, aes(x=Term, y=Richness)) +
          axis.title.y = element_text(size=12, colour = "black"),
          axis.title.x = element_blank())
 
-preterm_full_richness_day_amr <- ggplot(amr_alpha_month, aes(x=DOL, y=Richness,color=Term)) + 
-   geom_point(alpha=0.5,size=0.8)+
-   geom_smooth(method = loess,size=1.5,level=0.95)+
-   scale_color_manual(values = c("#4994C4","#E09137"),labels=c("preterm"="Preterm","full_term"="Term"))+
-   guides(color = guide_legend(reverse=T))+
-   labs(x ="Age (days)", y="Richness (number of aARG)")+
-   scale_x_continuous(limits = c(0,1500),breaks = c(0,500,1000,1500),labels=c("0","500","1,000","1,500"))+
-   theme_bw()+
-   theme(plot.margin = unit(c(1,5,1,1), "mm"))+
-   theme(panel.grid = element_blank(),axis.line = element_blank(),
-         panel.border = element_rect(colour = "black",linewidth = 1))+
-   theme(panel.background = element_blank(),
-         plot.background = element_blank(),
-         legend.position = "none",
-         legend.text = element_text(size=10, colour = "black"),
-         axis.text.y = element_blank(),
-         axis.text.x = element_text(size=12, colour="black"),
-         axis.ticks.y = element_blank(),
-         axis.title.y = element_blank(),
-         axis.title.x = element_text(size=12, colour = "black"))
-
-#Supplementary Figure 5b
+#Supplementary Figure 6b
 preterm_full_shannon_amr <- ggplot(amr_alpha, aes(x=Term, y=Shannon)) +
    geom_violin(aes(fill=Term),alpha=1,trim=T)+
    geom_boxplot(width=0.1,outlier.size = 1)+
@@ -594,28 +531,6 @@ preterm_full_shannon_amr <- ggplot(amr_alpha, aes(x=Term, y=Shannon)) +
          axis.title.y = element_text(size=12, colour = "black"),
          axis.title.x = element_blank())
 
-preterm_full_shannon_day_amr <- ggplot(amr_alpha_month, aes(x=DOL, y=Shannon,color=Term)) + 
-   geom_point(alpha=0.5,size=0.8)+
-   geom_smooth(method = loess,size=1.5,level=0.95)+
-   scale_color_manual(values = c("#4994C4","#E09137"),labels=c("preterm"="Preterm","full_term"="Term"))+
-   guides(color = guide_legend(reverse=T))+
-   labs(x ="Age (days)", y="Richness (number of aARG)")+
-   scale_x_continuous(limits = c(0,1500),breaks = c(0,500,1000,1500),labels=c("0","500","1,000","1,500"))+
-   theme_bw()+
-   theme(plot.margin = unit(c(1,5,1,1), "mm"))+
-   theme(panel.grid = element_blank(),axis.line = element_blank(),
-         panel.border = element_rect(colour = "black",linewidth = 1))+
-   theme(panel.background = element_blank(),
-         plot.background = element_blank(),
-         legend.position = "none",
-         legend.text = element_text(size=10, colour = "black"),
-         axis.text.y = element_blank(),
-         axis.text.x = element_text(size=12, colour="black"),
-         axis.ticks.y = element_blank(),
-         axis.title.y = element_blank(),
-         axis.title.x = element_text(size=12, colour = "black"))
-
-
 amr_t <- rbind.fill(amr_preterm_profile_coverm_gene_sum_t%>%rownames_to_column("run"),amr_term_profile_coverm_gene_sum_t%>%rownames_to_column("run"))
 amr_t[is.na(amr_t)] <- 0
 amr_t <- amr_t%>%column_to_rownames("run")
@@ -632,7 +547,7 @@ amr_t_beta_dist_db_g_2 <- left_join(amr_t_beta_dist_db_g_2,metadata_cb%>%dplyr::
 amr_t_beta_dist_db_g_2_sel <- amr_t_beta_dist_db_g_2%>%filter(Term.x==Term.y)
 amr_t_beta_dist_db_g_2_sel$Term.x <- factor(amr_t_beta_dist_db_g_2_sel$Term.x,levels = c("preterm","full_term"))
 wilcox_test(distance ~ Term.x,data = amr_t_beta_dist_db_g_2_sel)
-#Supplementary Figure 5e
+#Supplementary Figure 6e
 amr_distance <- ggplot(amr_t_beta_dist_db_g_2_sel, aes(x=Term.x, y=distance, fill=Term.x)) +
    geom_boxplot(outlier.size = 0.1)+
    stat_summary(fun="mean")+
@@ -671,7 +586,7 @@ amr_beta_df.plot <- tibble(Axis1 = amr_beta_pco.tabble$V1,
                                Axis2 = amr_beta_pco.tabble$V2,
                                Sample_ID = amr_beta_pco.tabble$SubjectID,
                                Term=amr_beta_pco.tabble$Term)
-#Supplementary Figure 5c
+#Supplementary Figure 6c
 amr_beta_time_p <- ggplot(data=amr_beta_df.plot,aes(x=Axis1, y=Axis2, col=Term)) +
    geom_point(size=1.5, alpha=1) + 
    scale_color_manual(values = c("#E09137","#4994C4"),labels=c("Full term","Preterm"),guide = guide_legend(reverse = TRUE))+
@@ -729,7 +644,7 @@ amr_term_profile_coverm_3_se$drug <- factor(amr_term_profile_coverm_3_se$drug,le
 amr_term_profile_coverm_3_se$Mean_rpkm2 <- amr_term_profile_coverm_3_se$Mean_rpkm
 amr_term_profile_coverm_3_se$Mean_rpkm2[amr_term_profile_coverm_3_se$drug=="tetracycline"]#332327.3
 amr_term_profile_coverm_3_se$Mean_rpkm2[amr_term_profile_coverm_3_se$drug=="tetracycline"] <- 120000
-#Supplementary Figure 4b
+#Supplementary Figure 5b
 amr_term_drug_class_p <- ggplot() +
    geom_bar(data=amr_term_profile_coverm_3_se, aes(x=drug, y=Mean_rpkm2),stat="identity",fill="#E09137",color="black",width = 0.8)+
    geom_errorbar(data=amr_term_profile_coverm_3_se,aes(x=drug,ymin=Mean_rpkm2, ymax=Mean_rpkm2+se), width=0.5)+
@@ -817,7 +732,7 @@ term_preterm_amr_sum$group <- factor(term_preterm_amr_sum$group,levels = c("pret
 term_preterm_amr_sum$group2 <- paste0(term_preterm_amr_sum$group,"_",term_preterm_amr_sum$drug)
 term_preterm_amr_sum$Mean_rpkm[term_preterm_amr_sum$group2=="full_term_tetracycline"]#332327.3
 term_preterm_amr_sum$Mean_rpkm[term_preterm_amr_sum$group2=="full_term_tetracycline"] <- 150000
-#Supplementary Figure 5d
+#Supplementary Figure 6d
 term_preterm_amr_p <- ggplot(term_preterm_amr_sum, aes(x=drug, y=Mean_rpkm,fill=group)) +
    geom_bar(stat="identity",position=position_dodge(),color="black",width = 0.8)+
    geom_errorbar(aes(ymin=Mean_rpkm, ymax=Mean_rpkm+se),position=position_dodge(0.8),width=0.5)+
@@ -877,7 +792,7 @@ tax_number[6,] <- c("Species",length(table(amr_term_profile$species))-1,sum(tabl
 tax_number$n_tax <- as.numeric(tax_number$n_tax)
 tax_number$n_args <- as.numeric(tax_number$n_args)
 tax_number$tax <- factor(tax_number$tax,levels = c("Phylum", "Class","Order","Family","Genus","Species"))
-#Supplementary Figure 4d
+#Supplementary Figure 5d
 tax_number_plot <- ggplot(tax_number, aes(x=tax, y=n_tax)) + 
    geom_bar(stat = "identity",fill="#E09137",color="black",width = 0.8)+
    geom_text(aes(label=paste0("(n=",formattable::comma(n_tax,digits=0),"; n=",formattable::comma(n_args,digits=0),")"),hjust=-0.1,size=3))+
@@ -951,7 +866,7 @@ tax_diver_2$name <- gsub(".__","",tax_diver_2$name)
 tax_diver_2$taxonomy <- paste(toupper(substr(tax_diver_2$taxonomy, 1, 1)), substr(tax_diver_2$taxonomy, 2, nchar(tax_diver_2$taxonomy)), sep="")
 tax_diver_2$taxonomy <- factor(tax_diver_2$taxonomy,levels = c("Phylum", "Class","Order","Family","Genus"))
 tax_diver_2$new_t <- factor(tax_diver_2$new_t, levels = c("1","12","11","10","9","8","7","6","5","4","3","2"))
-#Supplementary Figure 5f
+#Supplementary Figure 6f
 amr_taxa_all <- ggplot(tax_diver_2, aes(x=taxonomy, y=n, fill=new_t)) + 
    geom_bar(stat = "identity", width=0.8)+
    scale_fill_manual(values = c("#CACACA","#8F8F8F","#6AABF5","#BEBADA","#FB8072","#80B1D3","#FDB462",
@@ -996,7 +911,7 @@ amr_term_profile_species_2 <- amr_term_profile_species%>%group_by(species)%>%dpl
 amr_term_profile_species_sum_3 <- left_join(amr_term_profile_species_sum_3,amr_term_profile_species_2)
 amr_term_profile_species_sum_3$species <- factor(amr_term_profile_species_sum_3$species,levels = amr_term_profile_species_sum_3$species)
 amr_term_profile_species_sum_3$label <- paste0("(n=",formattable::comma(amr_term_profile_species_sum_3$n_args,digits=0),")")
-#Supplementary Figure 4e
+#Supplementary Figure 5e
 amr_taxa_species <- ggplot() +
    geom_bar(data=amr_term_profile_species_sum_3, aes(x=species, y=Mean_rpkm),stat="identity",fill="#E09137",color="black",width = 0.8)+
    geom_errorbar(data=amr_term_profile_species_sum_3,aes(x=species,ymin=Mean_rpkm, ymax=Mean_rpkm+se), width=0.5)+
@@ -1049,7 +964,7 @@ cluster_sum_sel_species_sum_1 <- cluster_sum_sel_species_sum%>%group_by(species)
 cluster_sum_sel_species_sum_2 <- cluster_sum_sel_species_sum%>%group_by(clstr)%>%dplyr::summarise(n=n())%>%filter(n>=4)
 cluster_sum_sel_species_sum_sel <- cluster_sum_sel_species_sum%>%
    filter(clstr%in%cluster_sum_sel_species_sum_2$clstr)%>%
-   mutate(n_args_2=case_when(n_args>20 ~ "10",
+   mutate(n_args_2=case_when(n_args>10 ~ "10",
                              TRUE ~ as.character(n_args)))%>%
    dplyr::select(-n_args)
 cluster_sum_sel_species_sum_sel$species <- gsub("s__","",cluster_sum_sel_species_sum_sel$species,fixed = T)
@@ -1069,7 +984,7 @@ plasmid_cluster <- Heatmap(as.matrix(cluster_sum_sel_species_s),cluster_rows=T,c
                            show_heatmap_legend = TRUE,
                            heatmap_legend_param = list(title = "Number of ARG ORFs",direction = "vertical", 
                                                        legend_height = unit(3, "cm"),legend_width = unit(0.3, "cm"),
-                                                       at = c(0,2,4,6,8,10), labels = c("0","2","4","6","8",">10"))
+                                                       at = c(0,2,4,6,8,10), labels = c("0","2","4","6","8","≥10"))
 )
 
 
@@ -1428,7 +1343,7 @@ trendline_sum(preterm_drug_2_species_sum$mean_drug[-c(17,25)], preterm_drug_2_sp
 preterm_drug_2_species_sum_term <- rbind(term_drug_2_species_sum,preterm_drug_2_species_sum)
 preterm_drug_2_species_sum_term <- preterm_drug_2_species_sum_term%>%filter(!is.na(total_abund))
 preterm_drug_2_species_sum_term$group <- factor(preterm_drug_2_species_sum_term$group,levels = c("Preterm","Term"))
-#Supplementary Figure 6b
+#Supplementary Figure 7b
 preterm_term_amr_species <- ggplot(preterm_drug_2_species_sum_term, aes(x=mean_drug, y=mean_abund,color=group)) + 
    geom_point(alpha=1)+
    geom_smooth(method = lm,linewidth=1,level=0.95)+
@@ -1538,7 +1453,7 @@ species_beta_df.plot <- tibble(Axis1 = species_beta_pco.tabble$V1,
                                Axis2 = species_beta_pco.tabble$V2,
                                Sample_ID = species_beta_pco.tabble$SubjectID,
                                Term=species_beta_pco.tabble$Term)
-#Supplementary Figure 6a
+#Supplementary Figure 7a
 species_beta_time_p <- ggplot(data=species_beta_df.plot,aes(x=Axis1, y=Axis2, col=Term)) +
    geom_point(size=1.5, alpha=1) + 
    scale_color_manual(values = c("#E09137","#4994C4"),labels=c("Full term","Preterm"),guide = guide_legend(reverse = TRUE))+
