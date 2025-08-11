@@ -145,7 +145,7 @@ amr_beta_df.plot <- tibble(Axis1 = amr_beta_pco.tabble$V1,
                            Sample_ID = amr_beta_pco.tabble$SubjectID,
                            nec2=amr_beta_pco.tabble$nec2)
 amr_beta_df.plot$nec2 <- factor(amr_beta_df.plot$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10b
+#Supplementary Figure 11b
 amr_gene_beta_time_p <- ggplot(data=amr_beta_df.plot,aes(x=Axis1, y=Axis2, col=nec2)) +
    geom_point(size=1.5, alpha=1) + 
    stat_ellipse(aes(fill=nec2),geom = "polygon",level = 0.95, alpha=0.05)+
@@ -206,7 +206,7 @@ alpha_subtype_pval <- alpha_subtype_pval%>%mutate_at(vars(-index,-comp1,-comp2),
 subtype_alpha_meta_g <- subtype_alpha_meta%>%dplyr::select(Richness,Shannon,SequenceID,nec2)%>%gather(.,group,value,-SequenceID,-nec2)
 subtype_alpha_meta_g$group[subtype_alpha_meta_g$group=="Shannon"] <- "Shannon index"
 subtype_alpha_meta_g$nec2 <- factor(subtype_alpha_meta_g$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10a
+#Supplementary Figure 11a
 subtype_alpha_p <- ggplot(data=subtype_alpha_meta_g,aes(x=nec2, y=value, col=nec2)) +
    geom_boxplot(outlier.size = 0.1) + 
    stat_summary(fun.y=mean, geom="point",size=2, color="black")+
@@ -276,7 +276,7 @@ subtype_beta_df.plot <- tibble(Axis1 = subtype_beta_pco.tabble$V1,
                                Sample_ID = subtype_beta_pco.tabble$SubjectID,
                                nec2=subtype_beta_pco.tabble$nec2)
 subtype_beta_df.plot$nec2 <- factor(subtype_beta_df.plot$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10a
+#Supplementary Figure 11a
 subtype_beta_time_p <- ggplot(data=subtype_beta_df.plot,aes(x=Axis1, y=Axis2, col=nec2)) +
    geom_point(size=1.5, alpha=1) + 
    stat_ellipse(aes(fill=nec2),geom = "polygon",level = 0.95, alpha=0.05)+
@@ -334,7 +334,7 @@ alpha_species_pval <- alpha_species_pval%>%mutate_at(vars(-index,-comp1,-comp2),
 species_alpha_meta_g <- species_alpha_meta%>%dplyr::select(Richness,Shannon,SequenceID,nec2)%>%gather(.,group,value,-SequenceID,-nec2)
 species_alpha_meta_g$group[species_alpha_meta_g$group=="Shannon"] <- "Shannon index"
 species_alpha_meta_g$nec2 <- factor(species_alpha_meta_g$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10c
+#Supplementary Figure 11c
 species_alpha_p <- ggplot(data=species_alpha_meta_g,aes(x=nec2, y=value, col=nec2)) +
    geom_boxplot(outlier.size = 0.1) + 
    stat_summary(fun.y=mean, geom="point",size=2, color="black")+
@@ -403,7 +403,7 @@ species_beta_df.plot <- tibble(Axis1 = species_beta_pco.tabble$V1,
                                Sample_ID = species_beta_pco.tabble$SubjectID,
                                nec2=species_beta_pco.tabble$nec2)
 species_beta_df.plot$nec2 <- factor(species_beta_df.plot$nec2,levels = c("no","preNEC","postNEC"))
-#Supplementary Figure 10c
+#Supplementary Figure 11c
 species_beta_time_p <- ggplot(data=species_beta_df.plot,aes(x=Axis1, y=Axis2, col=nec2)) +
    geom_point(size=1.5, alpha=1) + 
    stat_ellipse(aes(fill=nec2),geom = "polygon",level = 0.95, alpha=0.05)+
