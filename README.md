@@ -1,6 +1,4 @@
-(1) The files in data fold are input for the script in script folder.
-
-(2)The description and the output for each script.
+The description and the output for each script.
 1_preterm_ARGs_profile_host.R
 This script is used to analyze the composition and host of ARGs in preterm infants, including
 Figure 1b, Figure 1c, Figure 1d, Figure 4d, Supplementary Figure 2a, Supplementary Figure 2b, Supplementary Figure 2c, Supplementary Figure 2d, Supplementary Figure 2e, Supplementary Figure 2f, Supplementary Figure 2g, Supplementary Figure 3a, Supplementary Figure 3b, Supplementary Figure 4a, Supplementary Figure 4b, Supplementary Figure 8, Supplementary Figure 9a.
